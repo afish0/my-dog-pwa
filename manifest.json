@@ -1,0 +1,16 @@
+{
+    "name": "我的小狗应用",
+    "short_name": "小狗",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffcce6",
+    "theme_color": "#ff6b9d",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "any maskable"
+        }
+    ]
+}
