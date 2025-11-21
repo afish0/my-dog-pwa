@@ -1,16 +1,43 @@
 {
-    "name": "我的小狗应用",
+    "name": "可以做我的小狗吗",
     "short_name": "小狗",
-    "start_url": "/",
+    "description": "一个可爱的小狗养成PWA应用",
+    "start_url": "./",
     "display": "standalone",
+    "display_override": ["standalone", "fullscreen"],
     "background_color": "#ffcce6",
     "theme_color": "#ff6b9d",
+    "orientation": "portrait",
+    "scope": "./",
+    "categories": ["entertainment", "games", "lifestyle"],
+    "lang": "zh-CN",
+    "dir": "ltr",
     "icons": [
         {
-            "src": "/icon-192x192.png",
+            "src": "icon-192x192.png",
             "type": "image/png",
             "sizes": "192x192",
             "purpose": "any maskable"
+        },
+        {
+            "src": "icon-192x192.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "喂食小狗",
+            "short_name": "喂食",
+            "description": "给小狗喂食",
+            "url": "./",
+            "icons": [
+                {
+                    "src": "icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ]
 }

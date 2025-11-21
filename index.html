@@ -13,8 +13,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="小狗应用">
     <meta name="msapplication-TileColor" content="#ff6b9d">
-    <meta name="msapplication-config" content="/browserconfig.xml">
-    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-config" content="browserconfig.xml">
+    <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="icon-192x192.png">
     <link rel="icon" type="image/png" sizes="16x16" href="icon-192x192.png">
@@ -1813,15 +1813,45 @@
         // 注册Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
+                navigator.serviceWorker.register('service-worker.js')
                     .then(registration => {
-                        console.log('ServiceWorker 注册成功: ', registration.scope);
+                        console.log('✅ ServiceWorker 注册成功: ', registration.scope);
+                        console.log('✅ ServiceWorker 状态: ', registration.active ? '已激活' : '未激活');
+                        
+                        // 检查Service Worker是否就绪
+                        if (registration.installing) {
+                            console.log('🔄 ServiceWorker 正在安装...');
+                        } else if (registration.waiting) {
+                            console.log('⏳ ServiceWorker 等待激活...');
+                        } else if (registration.active) {
+                            console.log('✨ ServiceWorker 已激活并运行');
+                        }
                     })
                     .catch(err => {
-                        console.log('ServiceWorker 注册失败: ', err);
+                        console.error('❌ ServiceWorker 注册失败: ', err);
+                        console.error('❌ 错误详情: ', err.message);
+                        console.error('❌ 当前URL: ', window.location.href);
+                        console.error('❌ 用户代理: ', navigator.userAgent);
                     });
             });
+        } else {
+            console.warn('⚠️ 当前浏览器不支持ServiceWorker');
         }
+        
+        // PWA安装条件检查
+        function checkPWAInstallability() {
+            console.log('🔍 PWA安装条件检查:');
+            console.log('1. Service Worker支持:', 'serviceWorker' in navigator);
+            console.log('2. beforeinstallprompt支持:', 'onbeforeinstallprompt' in window);
+            console.log('3. HTTPS环境:', location.protocol === 'https:' || location.hostname === 'localhost');
+            console.log('4. Manifest检查:', !!document.querySelector('link[rel="manifest"]'));
+            console.log('5. 用户代理:', navigator.userAgent);
+            console.log('6. 是否安卓:', isAndroid());
+            console.log('7. 是否iOS:', isIOS());
+        }
+        
+        // 页面加载后检查PWA安装条件
+        setTimeout(checkPWAInstallability, 1000);
         
         // 检测设备类型
         function isAndroid() {
@@ -1847,8 +1877,8 @@
             
             // 根据设备类型设置不同的按钮样式和文本
             if (isAndroid()) {
-                installButton.textContent = '📱 安装到安卓桌面';
-                installButton.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+                installButton.textContent = '🐕 安装到安卓桌面';
+                installButton.style.background = 'linear-gradient(135deg, #ff6b9d, #ff9a9e)';
             } else {
                 installButton.textContent = '🚀 安装应用';
                 installButton.style.background = '#ff6b9d';
@@ -1915,25 +1945,28 @@
             modal.className = 'modal';
             modal.style.zIndex = '10001';
             modal.innerHTML = `
-                <div class="modal-content" style="max-width: 90%; width: 350px;">
-                    <h3>📱 安卓安装指南</h3>
+                <div class="modal-content" style="max-width: 90%; width: 380px;">
+                    <h3>🐕 安卓安装指南</h3>
+                    <div style="margin: 15px 0; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 10px;">📱</div>
+                    </div>
                     <p style="text-align: left; line-height: 1.6;">
-                        <strong>方法一：直接安装</strong><br>
-                        点击下方"立即安装"按钮即可<br><br>
+                        <strong style="color: #ff6b9d;">🎯 方法一：一键安装</strong><br>
+                        点击下方粉色"立即安装"按钮<br><br>
                         
-                        <strong>方法二：浏览器菜单安装</strong><br>
-                        1. 点击右上角 ⋮ 菜单<br>
-                        2. 选择"添加到主屏幕"或"安装应用"<br>
-                        3. 点击"添加"或"安装"<br><br>
+                        <strong style="color: #ff6b9d;">🛠️ 方法二：浏览器安装</strong><br>
+                        1. 点击右上角 ⋮ 三点菜单<br>
+                        2. 找到"添加到主屏幕"或"安装应用"<br>
+                        3. 点击"添加"完成安装<br><br>
                         
-                        <strong>安装后的优势：</strong><br>
-                        ✅ 离线使用<br>
-                        ✅ 桌面快捷方式<br>
-                        ✅ 全屏体验<br>
-                        ✅ 更快启动
+                        <strong style="color: #ffd166;">✨ 安装后的特权：</strong><br>
+                        🎀 离线也能和小狗玩耍<br>
+                        🎪 桌面有可爱小狗图标<br>
+                🌈 全屏沉浸式体验<br>
+                        🚀 启动速度快10倍
                     </p>
                     <div class="modal-buttons">
-                        <button class="choice-btn" style="background: #4CAF50;" onclick="performAndroidInstall()">立即安装</button>
+                        <button class="choice-btn" style="background: linear-gradient(135deg, #ff6b9d, #ff9a9e);" onclick="performAndroidInstall()">🐕 立即安装</button>
                         <button class="choice-btn" onclick="this.parentElement.parentElement.parentElement.remove()">稍后再说</button>
                     </div>
                 </div>
@@ -1946,12 +1979,14 @@
                 installPrompt.prompt();
                 installPrompt.userChoice.then((choiceResult) => {
                     modal.remove();
-                    document.querySelector('button[style*="position: fixed"]').remove();
+                    const fixedBtn = document.querySelector('button[style*="position: fixed"]');
+                    if (fixedBtn) fixedBtn.remove();
                     
                     if (choiceResult.outcome === 'accepted') {
                         showInstallSuccess();
                     } else {
                         console.log('用户拒绝了安装提示');
+                        showFeedback('💝 期待你下次安装小狗应用～', 'info');
                     }
                 });
             };
@@ -1982,31 +2017,94 @@
         
         // 检查是否已安装，如果已安装则不显示安装提示
         if (window.matchMedia('(display-mode: standalone)').matches) {
-            console.log('应用已经安装并处于独立模式');
+            console.log('✅ 应用已经安装并处于独立模式');
         } else if (isAndroid()) {
+            console.log('📱 检测到安卓设备，准备显示安装提示...');
             // 安卓设备：延迟2秒显示安装提示
             setTimeout(() => {
                 // 如果没有beforeinstallprompt事件，手动创建安装提示
                 if (!document.querySelector('button[style*="position: fixed"]')) {
+                    console.log('🔄 创建手动安装提示...');
                     showManualInstallGuide();
                 }
             }, 2000);
         }
         
+        // 添加调试按钮（仅在开发环境）
+        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+            const debugBtn = document.createElement('button');
+            debugBtn.textContent = '🔧 调试PWA';
+            debugBtn.style.position = 'fixed';
+            debugBtn.style.top = '10px';
+            debugBtn.style.left = '10px';
+            debugBtn.style.zIndex = '10000';
+            debugBtn.style.background = '#ff6b9d';
+            debugBtn.style.color = 'white';
+            debugBtn.style.padding = '8px 12px';
+            debugBtn.style.borderRadius = '15px';
+            debugBtn.style.border = 'none';
+            debugBtn.style.fontSize = '12px';
+            debugBtn.style.cursor = 'pointer';
+            
+            debugBtn.addEventListener('click', () => {
+                checkPWAInstallability();
+                
+                // 尝试手动触发安装提示
+                if (isAndroid()) {
+                    showManualInstallGuide();
+                }
+                
+                // 显示当前状态
+                const statusModal = document.createElement('div');
+                statusModal.className = 'modal';
+                statusModal.innerHTML = `
+                    <div class="modal-content" style="max-width: 400px;">
+                        <h3>🔧 PWA调试信息</h3>
+                        <div style="text-align: left; font-size: 12px; line-height: 1.4;">
+                            <strong>📱 设备信息:</strong><br>
+                            用户代理: ${navigator.userAgent.substring(0, 50)}...<br>
+                            是否安卓: ${isAndroid()}<br>
+                            是否iOS: ${isIOS()}<br><br>
+                            
+                            <strong>🌐 环境信息:</strong><br>
+                            协议: ${location.protocol}<br>
+                            域名: ${location.hostname}<br>
+                            路径: ${location.pathname}<br><br>
+                            
+                            <strong>⚙️ PWA支持:</strong><br>
+                            Service Worker: ${'serviceWorker' in navigator ? '✅' : '❌'}<br>
+                            beforeinstallprompt: ${'onbeforeinstallprompt' in window ? '✅' : '❌'}<br>
+                            已安装: ${window.matchMedia('(display-mode: standalone)').matches ? '✅' : '❌'}<br><br>
+                            
+                            <strong>📋 建议操作:</strong><br>
+                            1. 确保在HTTPS或localhost环境<br>
+                            2. 使用Chrome/Edge浏览器<br>
+                            3. 检查Service Worker注册状态<br>
+                            4. 验证manifest.json路径正确
+                        </div>
+                        <button class="choice-btn" onclick="this.parentElement.parentElement.remove()">关闭</button>
+                    </div>
+                `;
+                document.body.appendChild(statusModal);
+            });
+            
+            document.body.appendChild(debugBtn);
+        }
+        
         // 手动安装指南（当beforeinstallprompt不可用时）
         function showManualInstallGuide() {
             const installButton = document.createElement('button');
-            installButton.textContent = '📱 添加到安卓桌面';
+            installButton.textContent = '🐕 添加到安卓桌面';
             installButton.style.position = 'fixed';
             installButton.style.bottom = '20px';
             installButton.style.right = '20px';
             installButton.style.zIndex = '1000';
-            installButton.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            installButton.style.background = 'linear-gradient(135deg, #ff6b9d, #ff9a9e)';
             installButton.style.color = 'white';
             installButton.style.padding = '12px 18px';
             installButton.style.borderRadius = '25px';
             installButton.style.border = 'none';
-            installButton.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+            installButton.style.boxShadow = '0 4px 15px rgba(255, 107, 157, 0.4)';
             installButton.style.fontSize = '14px';
             installButton.style.fontWeight = 'bold';
             installButton.style.cursor = 'pointer';
@@ -2033,25 +2131,28 @@
             modal.className = 'modal';
             modal.style.zIndex = '10001';
             modal.innerHTML = `
-                <div class="modal-content" style="max-width: 90%; width: 350px;">
-                    <h3>📱 安卓安装方法</h3>
+                <div class="modal-content" style="max-width: 90%; width: 380px;">
+                    <h3>🐕 安卓安装方法</h3>
                     <div style="text-align: center; margin: 20px 0;">
-                        <div style="font-size: 4rem;">👆</div>
+                        <div style="font-size: 4rem;">🎯</div>
+                        <p style="color: #ff6b9d; font-weight: bold;">三步完成安装！</p>
                     </div>
                     <p style="text-align: left; line-height: 1.6;">
-                        <strong>请按以下步骤操作：</strong><br><br>
+                        <strong style="color: #ff6b9d;">1️⃣ 找到浏览器菜单</strong><br>
+                        点击右上角 ⋮ 三点菜单<br><br>
                         
-                        1️⃣ 点击浏览器右上角 ⋮ 菜单<br><br>
+                        <strong style="color: #ff6b9d;">2️⃣ 选择安装选项</strong><br>
+                        找到"添加到主屏幕"或"安装应用"<br><br>
                         
-                        2️⃣ 找到并点击"添加到主屏幕"<br>
-                        或"安装应用"<br><br>
+                        <strong style="color: #ff6b9d;">3️⃣ 完成安装</strong><br>
+                        点击"添加"即可完成！<br><br>
                         
-                        3️⃣ 点击"添加"或"安装"按钮<br><br>
-                        
-                        4️⃣ 完成！桌面会出现小狗图标 🐕
+                        <div style="background: linear-gradient(135deg, #ffd166, #ff9a9e); padding: 10px; border-radius: 10px; text-align: center; margin-top: 15px;">
+                            <strong style="color: #5a4a6a;">🎉 安装成功后桌面出现小狗图标！</strong>
+                        </div>
                     </p>
                     <div class="modal-buttons">
-                        <button class="choice-btn" style="background: #4CAF50;" onclick="this.parentElement.parentElement.parentElement.remove()">我知道了</button>
+                        <button class="choice-btn" style="background: linear-gradient(135deg, #ff6b9d, #ff9a9e);" onclick="this.parentElement.parentElement.parentElement.remove()">💝 我知道了</button>
                     </div>
                 </div>
             `;
