@@ -1,9 +1,10 @@
 const CACHE_NAME = 'my-dog-app-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/icon-192x192.png',
-    '/manifest.json'
+    './',
+    './index.html',
+    './icon-192x192.png',
+    './icon-512x512.png',
+    './manifest.json'
 ];
 
 self.addEventListener('install', event => {
